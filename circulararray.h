@@ -10,23 +10,23 @@ private:
     int back, front;
     
 public:
-    CircularArray();
-    CircularArray(int _capacity);
-    virtual ~CircularArray();
-    void push_front(T data);
-    void push_back(T data);
-    void insert(T data, int pos);
-    T pop_front();
-    T pop_back();
-    bool is_full();
-    bool is_empty();
-    int size();
-    void clear();
-    T &operator[](int);
-    void sort();
-    bool is_sorted();
-    void reverse();
-    string to_string(string sep=" ");
+    CircularArray();                        // +
+    CircularArray(int _capacity);           // 
+    virtual ~CircularArray();               // +
+    void push_front(T data);                //
+    void push_back(T data);                 //
+    void insert(T data, int pos);           //
+    T pop_front();                          //
+    T pop_back();                           //            
+    bool is_full();                         //
+    bool is_empty();                        //
+    int size();                             //
+    void clear();                           //
+    T &operator[](int index);               //
+    void sort();                            //
+    bool is_sorted();                       //
+    void reverse();                         //
+    string to_string(string sep=" ");       // +
 
 private:
     int next(int);
@@ -51,6 +51,89 @@ template <class T>
 CircularArray<T>::~CircularArray()
 {
     delete[] array;
+}
+
+template<class T>
+void CircularArray<T>::push_front(T data)
+{
+    // TODO
+    return;
+}   
+
+template<class T>
+void CircularArray<T>::push_back(T data)
+{
+    // TODO
+    return;
+}
+
+template<class T>
+void CircularArray<T>::insert(T data, int pos)
+{
+    // TODO
+    return;
+}
+
+template<class T>
+T CircularArray<T>::pop_front()
+{  
+    // TODO
+    return T{};
+}
+
+template<class T>
+T CircularArray<T>::pop_back()
+{
+    // TODO
+    return T{};
+}
+
+template<class T>
+bool CircularArray<T>::is_full()
+{
+    return next(rear) == front;
+}
+
+template<class T>
+bool CircularArray<T>::is_empty()
+{
+    return (this->size() == 0);
+}
+
+template<class T>
+int CircularArray<T>::size()
+{
+    // TODO
+}
+
+template<class T>
+void CircularArray<T>::clear()
+{
+
+}
+
+template<class T>
+T& CircularArray<T>::operator[](int index)
+{
+
+}
+
+template<class T>
+void CircularArray<T>::sort()
+{
+
+}
+
+template<class T>
+bool CircularArray<T>::is_sorted()
+{
+    
+}
+
+template<class T>
+void CircularArray<T>::reverse()
+{
+    
 }
 
 template <class T>
