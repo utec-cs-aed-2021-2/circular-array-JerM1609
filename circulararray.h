@@ -13,14 +13,15 @@ public:
     CircularArray();                        // +
     CircularArray(int _capacity);           // 
     virtual ~CircularArray();               // +
-    void push_front(T data);                //
-    void push_back(T data);                 //
+    void push_front(T data);                // +
+    void push_back(T data);                 // +
     void insert(T data, int pos);           //
     T pop_front();                          //
     T pop_back();                           //            
     bool is_full();                         //
     bool is_empty();                        //
     int size();                             //
+    void resize(int new_capacity);
     void clear();                           //
     T &operator[](int index);               //
     void sort();                            //
@@ -56,15 +57,19 @@ CircularArray<T>::~CircularArray()
 template<class T>
 void CircularArray<T>::push_front(T data)
 {
-    // TODO
-    return;
+    if (this->is_full())      // if last index is filled
+        this->resize(capacity * 2);
+    front = prev(front);      // go to the previous index
+    array[front] = data;      // fill index with new element
 }   
 
 template<class T>
 void CircularArray<T>::push_back(T data)
 {
-    // TODO
-    return;
+    if (this->is_full())       // if array is completely full
+        this->resize(capacity * 2);
+    back = next(back);         // go to the next index
+    array[back] = data;        // fill index with new element
 }
 
 template<class T>
@@ -77,15 +82,25 @@ void CircularArray<T>::insert(T data, int pos)
 template<class T>
 T CircularArray<T>::pop_front()
 {  
-    // TODO
-    return T{};
+    if (array == nullptr || this->is_empty())
+        return T{};
+    T rt_value = array[front];
+    front = next(front);
+    // estrategia para liberar espacios inutilizados
+
+    return rt_value;
 }
 
 template<class T>
 T CircularArray<T>::pop_back()
 {
-    // TODO
-    return T{};
+    if (array == nullptr || this->is_empty())
+        return T{};
+    T rt_value = array[back];
+    back = prev(back);
+    // estrategia para liberar espacios inutilizados
+    
+    return rt_value;
 }
 
 template<class T>
@@ -103,12 +118,16 @@ bool CircularArray<T>::is_empty()
 template<class T>
 int CircularArray<T>::size()
 {
-    if (front > back)       // TestCases (f, b) -> (7, 1) (6, 2)
-        return this->capacity - (front - back - 1);
-    else if (front < back)  // TestCases (f, b) -> (1, 6) (1, 4)    
-        return back - front + 1;
-    else 
-        return 0;
+    //TODO
+}
+
+template<class T>
+void CircularArray<T>::resize(int new_capacity)
+{
+    T* new_array = new T[new_capacity];
+    for (int i = 0; i < min(capacity, new_capacity); i++)
+        new_array[i] = array[i];
+    this->capacity = new_capacity;
 }
 
 template<class T>
