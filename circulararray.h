@@ -42,9 +42,9 @@ CircularArray<T>::CircularArray()
 template <class T>
 CircularArray<T>::CircularArray(int _capacity)
 {
-    this->array = new T[_capacity];
-    this->capacity = _capacity;
-    this->front = this->back = -1;
+    this->array = new T[_capacity];         // dynamic array in heap
+    this->capacity = _capacity;             // assign capacity
+    this->front = this->back = -1;          // initialize indirection markers
 }
 
 template <class T>
@@ -103,7 +103,12 @@ bool CircularArray<T>::is_empty()
 template<class T>
 int CircularArray<T>::size()
 {
-    // TODO
+    if (front > back)       // TestCases (f, b) -> (7, 1) (6, 2)
+        return this->capacity - (front - back - 1);
+    else if (front < back)  // TestCases (f, b) -> (1, 6) (1, 4)    
+        return back - front + 1;
+    else 
+        return 0;
 }
 
 template<class T>
@@ -127,7 +132,7 @@ void CircularArray<T>::sort()
 template<class T>
 bool CircularArray<T>::is_sorted()
 {
-    
+
 }
 
 template<class T>
