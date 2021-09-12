@@ -4,10 +4,10 @@ using namespace std;
 template <class T>
 class CircularArray
 {
-private:
-    T *array;
-    int capacity;
-    int back, front;
+protected:
+    T *array;           // for runtime resizing
+    int capacity;       // for table doubling
+    int back, front;    // indirection markers
     
 public:
     CircularArray();                        // +
@@ -99,7 +99,9 @@ T CircularArray<T>::pop_back()
     T rt_value = array[back];
     back = prev(back);
     // estrategia para liberar espacios inutilizados
-    
+    if (size < capacity/2)
+        this->resize(capacity/2);
+        
     return rt_value;
 }
 
