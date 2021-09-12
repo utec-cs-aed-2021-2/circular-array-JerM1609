@@ -11,27 +11,30 @@ protected:
     
 public:
     CircularArray();                        // +
-    CircularArray(int _capacity);           // 
+    CircularArray(int _capacity);           // +
     virtual ~CircularArray();               // +
+
     void push_front(T data);                // +
     void push_back(T data);                 // +
     void insert(T data, int pos);           //
-    T pop_front();                          //
-    T pop_back();                           //            
+    T pop_front();                          // +
+    T pop_back();                           // +          
+    
     bool is_full();                         //
     bool is_empty();                        //
     int size();                             //
-    void resize(int new_capacity);
-    void clear();                           //
+    
+    void resize(int new_capacity);          // +
+    void clear();                           // +
     T &operator[](int index);               //
     void sort();                            //
     bool is_sorted();                       //
-    void reverse();                         //
+    void reverse();                         // +-
     string to_string(string sep=" ");       // +
 
 private:
-    int next(int);
-    int prev(int);
+    int next(int);      // +
+    int prev(int);      // +
 };
 
 template <class T>
@@ -83,11 +86,16 @@ template<class T>
 T CircularArray<T>::pop_front()
 {  
     if (array == nullptr || this->is_empty())
+    {
+        cerr << "pop_front() method doesn't work because structure is empty\n";
         return T{};
+    }
     T rt_value = array[front];
     front = next(front);
-    // estrategia para liberar espacios inutilizados
 
+    // estrategia para liberar espacios inutilizados
+    if (this->size() < capacity/2)
+        this->resize(capacity/2);
     return rt_value;
 }
 
@@ -95,20 +103,23 @@ template<class T>
 T CircularArray<T>::pop_back()
 {
     if (array == nullptr || this->is_empty())
+    {
+        cerr << "pop_back() method doesn't work because structure is empty\n";
         return T{};
+    }
     T rt_value = array[back];
     back = prev(back);
+
     // estrategia para liberar espacios inutilizados
-    if (size < capacity/2)
+    if (this->size() < capacity/2)
         this->resize(capacity/2);
-        
     return rt_value;
 }
 
 template<class T>
 bool CircularArray<T>::is_full()
 {
-    return next(rear) == front;
+    return next(back) == front && prev(front) == back;
 }
 
 template<class T>
@@ -135,7 +146,9 @@ void CircularArray<T>::resize(int new_capacity)
 template<class T>
 void CircularArray<T>::clear()
 {
-
+    delete[] array;
+    capacity = 0;
+    front = back = -1;
 }
 
 template<class T>
@@ -159,7 +172,18 @@ bool CircularArray<T>::is_sorted()
 template<class T>
 void CircularArray<T>::reverse()
 {
-    
+    int sfront = front, sback = sback;
+    T temp;
+    while (sfront < sback)          // then, change condition
+    {
+        temp = array[sback];
+        array[sback] = array[sfront];
+        array[sfront] = temp;
+        
+        sfront = this->next(sfront);
+        sback = this->prev(sback);
+    }
+    return;
 }
 
 template <class T>
@@ -177,8 +201,12 @@ int CircularArray<T>::next(int index)
 template <class T>
 string CircularArray<T>::to_string(string sep)
 {
+    int traverse = front, nback = this->next(back);
     string result = ""; 
-    for (int i = 0; i < size(); i++)
-        result += std::to_string((*this)[i]) + sep;
+    while(traverse != nback)
+    {
+        result += std::to_string((*this)[traverse]) + sep;
+        traverse = this->next(traverse);
+    }
     return result;    
 }
