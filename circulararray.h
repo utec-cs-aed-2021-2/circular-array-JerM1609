@@ -1,5 +1,102 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
+
+template<typename T>
+void swapValue(T *first, T *second)
+{
+    T valTemp = *first;
+    *first = *second;
+    *second = valTemp;
+    return;
+}
+
+template<typename T>
+T* Median(T *a, T *b, T *c)
+{
+    if ((*a < *b && *b < *c) ||
+            (*c < *b && *b < *a))
+        return b;
+    else if ((*b < *a && *a < *c) ||
+                (*c < *a && *a < *b))
+        return a;
+    else return c;
+}
+
+template<typename T>
+void InsertionSort(T *arr, T *begin, T *end)
+{
+    int left = begin - arr, right = end - arr;
+    T cpos, fpos, celement;
+    for (int i = left + 1; i <= right; ++i) {
+        celement = arr[i];
+        cpos = fpos = i;
+        while (celement < arr[cpos - 1] && cpos > left)
+        {
+            arr[cpos] = arr[cpos - 1];
+            fpos = --cpos;
+        }
+        arr[fpos] = celement;
+    }
+}
+
+template<typename T>
+T* Partition(T *arr, int low, int high)
+{
+    T pivot = arr[high];
+    int i = (low - 1), j = low;
+
+    for (; j <= high - 1 ; j++)
+    {
+        if (arr[j] < pivot)             // stable
+        {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return (arr + i + 1);
+}
+
+template<typename T>
+void SelectAlgo(T *arr, T *begin, T *end, int depthLimit)
+{
+    int size = end - begin;
+
+    if (size < 16)
+    {
+        InsertionSort(arr, begin, end);
+        return;
+    }
+
+    if (depthLimit == 0)
+    {
+        make_heap(begin, end + 1);
+        sort_heap(begin, end + 1);
+        return;
+    }
+
+    // optimum way to choose a pivot
+    T* pivot = Median(begin, begin + size/2, end);
+    cout << "size/2: " << size/2 << " pivot: " <<  *pivot << endl;
+    swapValue(pivot, end);
+
+    T* partitionPoint = Partition(arr, begin - arr, end - arr);
+    printArray(arr, 20);
+    SelectAlgo(arr, begin, partitionPoint - 1, depthLimit - 1);
+    SelectAlgo(arr, partitionPoint + 1, end, depthLimit - 1);
+    return;
+}
+
+template<typename T>
+void Introsort(T *arr, T *begin, T *end)
+{
+    int depthLimit = 2 * log(end - begin);
+    SelectAlgo(arr, begin, end, depthLimit);
+    return;
+}
+
+// ---------------------------------------------------------------------------------
 
 template <class T>
 class CircularArray
@@ -26,9 +123,9 @@ public:
     
     void resize(int new_capacity);          // +
     void clear();                           // +
-    T &operator[](int index);               //
-    void sort();                            //
-    bool is_sorted();                       //
+    T &operator[](int index);               // +
+    void sort();                            //  
+    bool is_sorted();                       // 
     void reverse();                         // +-
     string to_string(string sep=" ");       // +
 
@@ -154,13 +251,13 @@ void CircularArray<T>::clear()
 template<class T>
 T& CircularArray<T>::operator[](int index)
 {
-
+    return array[(front + index)%capacity];
 }
 
 template<class T>
 void CircularArray<T>::sort()
 {
-
+    //Introsort();
 }
 
 template<class T>

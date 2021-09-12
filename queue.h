@@ -26,5 +26,5 @@ void QueueArray<T>::enqueue(T data)
 template<typename T>
 void QueueArray<T>::display()
 {
-    return;
+    cout << this->to_string(" ");
 }

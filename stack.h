@@ -26,5 +26,5 @@ T StackArray<T>::pop()
 template<typename T>
 void StackArray<T>::display()
 {
-    return;
+    cout << this->to_string(" ");
 }
