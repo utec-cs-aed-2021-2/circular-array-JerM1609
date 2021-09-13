@@ -161,7 +161,7 @@ void CircularArray<T>::push_front(T data)
     if (this->is_full())      // if last index is filled
         this->resize(capacity * 2);
     front = prev(front);      // go to the previous index
-    array[front] = data;      // fill index with new element}
+    array[front] = data;      // fill index with new element
     size_++;
 }   
 
@@ -265,7 +265,7 @@ void CircularArray<T>::clear()
 {
     delete[] array;
     capacity = size_ = 0;
-    front = back = -1;
+    front = 0, back = -1;
 }
 
 template<class T>
@@ -290,7 +290,7 @@ void CircularArray<T>::sort()
     // sort values in auxiliar array -> O(n logn)
     Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
-    // copy values from auxiliar array to array member -> O(n)
+    // copy values from auxiliar array to array member attribute -> O(n)
     traverse = front, i = 0;
     while (traverse != back && i < size_)
     {
@@ -315,37 +315,45 @@ bool CircularArray<T>::is_sorted()
         traverse = next(traverse); i++;
     }
     aux_array[i] = array[traverse];
-    
-    // sort values of auxiliar_array
+
+    // sort values of auxiliar_array -> O(n logn)
     Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
-    // compare arrays
+    // compare arrays -> O(n)
     traverse = front, i = 0;
     while(traverse != back && i < size_)
     {
         if (aux_array[i] != array[traverse])
         {
-            delete[] aux_array;
+            delete[] aux_array;     // release memory
             return false;
         }
         traverse = next(traverse);
         i++;
     }
-    delete[] aux_array;
+    if (aux_array[i] != array[traverse])
+    {
+        delete[] aux_array;     // release memory
+        return false;
+    }
+
+    delete[] aux_array;     // release memory
     return true;
 }
 
 template<class T>
 void CircularArray<T>::reverse()
 {
-    int sfront = front, sback = sback;
+    int sfront = front, sback = back;
     T temp;
     while (sfront != sback)          
     {
+        // swap elements of complementary indices
         temp = array[sback];
         array[sback] = array[sfront];
         array[sfront] = temp;
         
+        // move indices
         sfront = this->next(sfront);
         sback = this->prev(sback);
     }
@@ -367,13 +375,14 @@ int CircularArray<T>::next(int index)
 template <class T>
 string CircularArray<T>::to_string(string sep)
 {
-    int traverse = front, nback = back;
-    string result = ""; 
-    while(traverse != nback)
+    int traverse = front; string result = ""; 
+    // iterate between front & back markers
+    while(traverse != back)
     {
         result += std::to_string((*this)[traverse]) + sep;
         traverse = this->next(traverse);
     }
     result += std::to_string((*this)[traverse]) + sep;
+
     return result;       
 }
