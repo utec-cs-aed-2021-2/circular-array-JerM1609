@@ -35,32 +35,40 @@ void test_2()
 {
     CircularArray<long long>* carray = new CircularArray <long long>(1);
     string showArray;
-    for (long long i = 0; i <= 10; i++)
+    int cnt = 1;
+    while (cnt <= 3)
     {
-        if (i & 1)  // "i" is odd
-            carray->push_back(i);
-        else
-            carray->push_front(i);
-        cout << carray->to_string() << '\n';
+        for (long long i = 0; i <= 10*cnt; i++)
+        {
+            if (i & 1)  // "i" is odd
+                carray->push_back(i);
+            else
+                carray->push_front(i);
+            cout << carray->to_string() << '\n';
+        }
+        /*
+        cout << "carray: " << carray->to_string() << '\n';
+        carray->reverse();
+        cout << "carray: " << carray->to_string() << '\n';
+        carray->sort();
+        cout << "carray: " << carray->to_string() << '\n';
+        carray->reverse();
+        cout << "carray: " << carray->to_string() << '\n';
+        */
+        int j = 0;
+        while(!carray->is_empty()){
+            if (j&1)
+                carray->pop_front();
+            else
+                carray->pop_back(); 
+            cout << carray->to_string() << '\n';
+            j++;
+        }
+        cout << "carray: " << carray->to_string() << '\n';
+        carray->clear();
+        cnt++;
     }
-    cout << "carray: " << carray->to_string() << '\n';
-    carray->reverse();
-    cout << "carray: " << carray->to_string() << '\n';
-    carray->sort();
-    cout << "carray: " << carray->to_string() << '\n';
-    carray->reverse();
-    cout << "carray: " << carray->to_string() << '\n';
-
-    int j = 0;
-    while(!carray->is_empty()){
-        if (j&1)
-            carray->pop_front();
-        else
-            carray->pop_back(); 
-        cout << carray->to_string() << '\n';
-        j++;
-    }
-    cout << "carray: " << carray->to_string() << '\n';
+    
     return;
 }
 
@@ -73,9 +81,9 @@ int main() {
     cout << "\n\tTEST 1\n";
     test_1();
 
-    cout << "\n\tTEST 2\n";
-    test_2();
+    //cout << "\n\tTEST 2\n";
+    //test_2();
 
-    cout << "\n\tTEST 3\n";
+    //cout << "\n\tTEST 3\n";
     return 0;
 }

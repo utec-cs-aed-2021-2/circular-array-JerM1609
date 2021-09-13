@@ -89,7 +89,7 @@ void SelectAlgo(T *arr, T *begin, T *end, int depthLimit)
 
     // optimum way to choose a pivot
     T* pivot = Median(begin, begin + size/2, end);
-    cout << "size/2: " << size/2 << " pivot: " <<  *pivot << endl;
+    //cout << "size/2: " << size/2 << " pivot: " <<  *pivot << endl;
     swapValue(pivot, end);
 
     T* partitionPoint = Partition(arr, begin - arr, end - arr);
@@ -131,7 +131,7 @@ public:
     bool is_empty();                        // ++
     int size();                             // ++
     
-    void resize(int new_capacity);          // +
+    void resize(int new_capacity);          // +-+
     void clear();                           // ++
     T &operator[](int index);               // ++
     void sort();                            // ++
@@ -169,6 +169,11 @@ template<class T>
 void CircularArray<T>::push_front(T data)
 {   //cout << __PRETTY_FUNCTION__ << " ";
 
+    if (this->is_empty() && capacity == 0 && array == nullptr)
+    {
+        capacity = 1;
+        this->resize(capacity);
+    }
     if (this->is_full())      // if array is completely full
         this->resize(capacity * 2);
     
@@ -189,7 +194,12 @@ void CircularArray<T>::push_front(T data)
 template<class T>
 void CircularArray<T>::push_back(T data)
 {   //cout << __PRETTY_FUNCTION__ << " ";
-    
+
+    if (this->is_empty() && capacity == 0 && array == nullptr)
+    {
+        capacity = 1;
+        this->resize(capacity);
+    }
     if (this->is_full())       // if array is completely full
         this->resize(capacity * 2);
     
@@ -275,7 +285,7 @@ bool CircularArray<T>::is_full()
 template<class T>
 bool CircularArray<T>::is_empty()
 {
-    return size_ == 0;  //cout << " (" <<  size_ << ") ";
+    return (size_ == 0);  //cout << " (" <<  size_ << ") ";
 }
 
 template<class T>
@@ -325,7 +335,8 @@ void CircularArray<T>::resize(int new_capacity)
 template<class T>
 void CircularArray<T>::clear()
 {   // release and restart indirection markers
-    delete[] array;         
+    delete[] array;    
+    array = nullptr;     
     capacity = size_ = 0;
     front = back = -1;
 }
