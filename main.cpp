@@ -4,7 +4,8 @@
 
 using namespace std;
 
-int main() {
+void test_1()
+{
     CircularArray<int>* array = new CircularArray<int>(7);
     ASSERT(array->is_empty() == true, "The function is_empty is not working");
     array->push_back(6);
@@ -28,5 +29,49 @@ int main() {
     array->reverse();
     ASSERT(array->to_string() == "15 10 8 7 4 3 2 ", "The function reverse is not working");   
     delete array;
+}
+
+void test_2()
+{
+    cout << __PRETTY_FUNCTION__ << " ";
+    CircularArray<long long>* carray = new CircularArray <long long>(1);
+    string showArray;
+    for (long long i = 0; i <= 10; i++)
+    {
+        if (i & 1)  // "i" is odd
+            carray->push_back(i);
+        else
+            carray->push_front(i);
+        cout << carray->to_string() << '\n';
+    }
+    
+
+    int j = 0;
+    while(!carray->is_empty()){
+        if (j&1){
+            //cout << "pop_front():  "; 
+            carray->pop_front();
+        } 
+        else
+        {
+            //cout << "pop_back():   "; 
+            carray->pop_back();
+        } 
+        cout << carray->to_string() << '\n';
+        j++;
+    }
+    cout << "carray: " << carray->to_string() << '\n';
+    
+    return;
+}
+
+void test_3()
+{
+    return;
+}
+
+int main() {
+    test_1();
+    //test_2();
     return 0;
 }
