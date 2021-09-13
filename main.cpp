@@ -5,6 +5,7 @@
 using namespace std;
 
 int main() {
+    
     CircularArray<int>* array = new CircularArray<int>(7);
     ASSERT(array->is_empty() == true, "The function is_empty is not working");
     array->push_back(6);
@@ -28,5 +29,6 @@ int main() {
     array->reverse();
     ASSERT(array->to_string() == "15 10 8 7 4 3 2 ", "The function reverse is not working");   
     delete array;
+
     return 0;
 }
