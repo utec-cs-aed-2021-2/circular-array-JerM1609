@@ -117,31 +117,31 @@ protected:
     int back, front;    // indirection markers
     int size_ = 0;
 public:
-    CircularArray();                        // +
-    CircularArray(int _capacity);           // +
-    virtual ~CircularArray();               // +
+    CircularArray();                        // ++
+    CircularArray(int _capacity);           // ++
+    virtual ~CircularArray();               // ++
 
-    void push_front(T data);                // +
-    void push_back(T data);                 // +
+    void push_front(T data);                // +-+
+    void push_back(T data);                 // +-+
     void insert(T data, int pos);           // -
-    T pop_front();                          // +
-    T pop_back();                           // +          
+    T pop_front();                          // +-+
+    T pop_back();                           // +-+        
     
-    bool is_full();                         // +
-    bool is_empty();                        // +
-    int size();                             // +
+    bool is_full();                         // ++
+    bool is_empty();                        // ++
+    int size();                             // ++
     
     void resize(int new_capacity);          // +
-    void clear();                           // +
-    T &operator[](int index);               // +
-    void sort();                            // +
-    bool is_sorted();                       // +
-    void reverse();                         // +
-    string to_string(string sep=" ");       // +
+    void clear();                           // ++
+    T &operator[](int index);               // ++
+    void sort();                            // ++
+    bool is_sorted();                       // ++
+    void reverse();                         // ++
+    string to_string(string sep=" ");       // ++
 
 private:
-    int next(int);      // +
-    int prev(int);      // +
+    int next(int);      // ++
+    int prev(int);      // ++
 };
 
 template <class T>
@@ -167,34 +167,43 @@ CircularArray<T>::~CircularArray()
 
 template<class T>
 void CircularArray<T>::push_front(T data)
-{
-    //cout << __PRETTY_FUNCTION__ << " ";
-    if (this->is_full())      // if last index is filled
+{   //cout << __PRETTY_FUNCTION__ << " ";
+
+    if (this->is_full())      // if array is completely full
         this->resize(capacity * 2);
-    if (size_ == 0 && front < 0)
-    {
-        front = 1; back = 0;
-    }
+    
+    if (size_ == 0 && front < 0)        
+        front = 1, back = 0;  // special case  
         
     front = prev(front);      // go to the previous index
     array[front] = data;      // fill index with new element
-    size_++;
+    size_++;                  // adjust size_ attribute
 
-    //printArray(array, capacity); cout << "->  (" << front << ", " << back << ") -> ";
+    /*
+    printArray(array, capacity); 
+    cout << "->  (" << front << ", " << back << ") -> ";
+    */
+    return;
 }   
 
 template<class T>
 void CircularArray<T>::push_back(T data)
-{
-    //cout << __PRETTY_FUNCTION__ << " ";
+{   //cout << __PRETTY_FUNCTION__ << " ";
+    
     if (this->is_full())       // if array is completely full
         this->resize(capacity * 2);
+    
     back = next(back);         // go to the next index
     array[back] = data;        // fill index with new element
-    size_++;
+    size_++;                   // adjust size_ attribute
+
     if (size_ == 1 && front < 0)
-        front = back;
-    //printArray(array, capacity); cout << "->  (" << front << ", " << back << ") -> ";
+        front = back;          // special case
+    /*
+    printArray(array, capacity); 
+    cout << "->  (" << front << ", " << back << ") -> ";
+    */
+    return;
 }
 
 template<class T>
@@ -213,41 +222,47 @@ void CircularArray<T>::insert(T data, int pos)
 
 template<class T>
 T CircularArray<T>::pop_front()
-{  
-    //cout << __PRETTY_FUNCTION__ << " ";
+{   //cout << __PRETTY_FUNCTION__ << " ";
+    
     if (array == nullptr || this->is_empty())
     {
         cerr << "pop_front() method doesn't work because structure is empty\n";
         return T{};
     }
-    T rt_value = array[front];
-    front = next(front);
-    size_--;
+    T rt_value = array[front];  // obtain value of front
+    front = next(front);        // go to the next index
+    size_--;                    // adjust size_ member attribute
+
     // estrategia para liberar espacios inutilizados
-    //cout << " (" << size_ << ", " << capacity << ") -> ";
     if (size_ < (capacity/2))
         this->resize(capacity/2);
-    //printArray(array, capacity); cout << "->  ";
+    /*
+    cout << " (" << size_ << ", " << capacity << ") -> ";
+    printArray(array, capacity); cout << "->  ";
+    */
     return rt_value;
 }
 
 template<class T>
 T CircularArray<T>::pop_back()
-{
-    //cout << __PRETTY_FUNCTION__ << " ";
+{   //cout << __PRETTY_FUNCTION__ << " ";
+    
     if (array == nullptr || this->is_empty())
     {
         cerr << "pop_back() method doesn't work because structure is empty\n";
         return T{};
     }
-    T rt_value = array[back];
-    back = prev(back);
-    size_--;
-    //cout << " (" << size_ << ", " << capacity << ") -> ";
+    T rt_value = array[back];   // obtain value of back
+    back = prev(back);          // go to the previous index
+    size_--;                    // adjust size_ member attribute
+    
     // estrategia para liberar espacios inutilizados
     if (size_ < (capacity/2))
         this->resize(capacity/2);
-    //printArray(array, capacity); cout << "->  ";
+    /*
+    cout << " (" << size_ << ", " << capacity << ") -> ";
+    printArray(array, capacity); cout << "->  ";
+    */
     return rt_value;
 }
 
@@ -260,8 +275,7 @@ bool CircularArray<T>::is_full()
 template<class T>
 bool CircularArray<T>::is_empty()
 {
-    //cout << " (" <<  size_ << ") ";
-    return size_ == 0;
+    return size_ == 0;  //cout << " (" <<  size_ << ") ";
 }
 
 template<class T>
@@ -273,46 +287,45 @@ int CircularArray<T>::size()
 template<class T>
 void CircularArray<T>::resize(int new_capacity)
 {
-    //cout << __PRETTY_FUNCTION__ << " " << new_capacity << " -> ";
-
-    //cout << "\n( old_capacity: " << capacity << ", old_front: " << front << ", old_back: " << back << " ) -> ";
-    //printArray(array, capacity); cout << endl;
+    /*
+    cout << __PRETTY_FUNCTION__ << endl;
+    cout << "\n( old_capacity: " << capacity << ", old_front: " << front << ", old_back: " << back << " ) -> ";
+    printArray(array, capacity); cout << endl;
+    */
 
     T* new_array = new T[new_capacity];
-    int traverse = front;
-    int i = traverse % new_capacity, aux_sz = 0;
+    int traverse, i, aux_sz;
+    
+    // initialize "pointers" and accountant
+    traverse = front, i = traverse % new_capacity, aux_sz = 0;
+    this->front = i;    // reassign front indirection marker
 
-    this->front = i;
     // copy numbers in new array
     while (aux_sz < size_)
     {
-        /*
-        if (new_capacity == 8)
-        {
-            cout << "( i: " << i << ", traverse: " << traverse << ") -> " << array[traverse] << "\n";
-        }
-        */
         new_array[i] = array[traverse];
         i = (i + 1) % new_capacity;
         traverse = next(traverse);
         aux_sz++;
     }
-    //new_array[i] = array[traverse];
+    delete[] array;     // release memory
 
-    delete[] array;
-
+    // reassing member attributes
     this->capacity = new_capacity;
     this->back = prev(i);
     this->array = new_array;
-    //cout << "( new_capacity: " << capacity << ", new_front: " << front << ", new_back: " << back << " ) -> ";
-    //printArray(array, capacity); cout << endl;
+
+    /*
+    cout << "( new_capacity: " << capacity << ", new_front: " << front << ", new_back: " << back << " ) -> ";
+    printArray(array, capacity); cout << endl;
+    */
     return;
 }
 
 template<class T>
 void CircularArray<T>::clear()
-{
-    delete[] array;
+{   // release and restart indirection markers
+    delete[] array;         
     capacity = size_ = 0;
     front = back = -1;
 }
@@ -326,28 +339,27 @@ T& CircularArray<T>::operator[](int index)
 template<class T>
 void CircularArray<T>::sort()
 {
-    // store values of array in auxiliar array -> O(n)
     T* aux_array = new T[size_];
-    int traverse = front, i = 0; 
-    while (traverse != back && i < size_)
+    int traverse, i;
+
+    // store values of array in auxiliar array -> O(n)
+    traverse = front, i = 0; 
+    while ( i < size_ )
     {
         aux_array[i] = array[traverse];
-        traverse = next(traverse); i++;
+        traverse = next(traverse), i++;
     }
-    aux_array[i] = array[traverse];
 
     // sort values in auxiliar array -> O(n logn)
     Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
     // copy values from auxiliar array to array member attribute -> O(n)
     traverse = front, i = 0;
-    while (traverse != back && i < size_)
+    while ( i < size_ )
     {
         array[traverse] = aux_array[i];
-        traverse = next(traverse); i++;
+        traverse = next(traverse), i++;
     }
-    array[traverse] = aux_array[i];
-
     delete[] aux_array;     // release memory
     return;
 }
@@ -355,37 +367,31 @@ void CircularArray<T>::sort()
 template<class T>
 bool CircularArray<T>::is_sorted()
 {
-    // store values of array in auxiliar array -> O(n)
     T* aux_array = new T[size_];
-    int traverse = front, i = 0;
-    while (traverse != back && i < size_)
+    int traverse, i;
+
+    // store values of array in auxiliar array -> O(n)
+    traverse = front, i = 0;
+    while ( i < size_ )
     {
         aux_array[i] = array[traverse];
-        traverse = next(traverse); i++;
+        traverse = next(traverse), i++;
     }
-    aux_array[i] = array[traverse];
 
     // sort values of auxiliar_array -> O(n logn)
     Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
     // compare arrays -> O(n)
     traverse = front, i = 0;
-    while(traverse != back && i < size_)
+    while( i < size_ )
     {
         if (aux_array[i] != array[traverse])
         {
             delete[] aux_array;     // release memory
             return false;
         }
-        traverse = next(traverse);
-        i++;
+        traverse = next(traverse), i++;
     }
-    if (aux_array[i] != array[traverse])
-    {
-        delete[] aux_array;     // release memory
-        return false;
-    }
-
     delete[] aux_array;     // release memory
     return true;
 }
@@ -397,7 +403,7 @@ void CircularArray<T>::reverse()
     T temp;
     while (sfront != sback)          
     {
-        // swap elements of complementary indices
+        // swap elements with complementary indices
         temp = array[sback];
         array[sback] = array[sfront];
         array[sfront] = temp;
@@ -424,17 +430,16 @@ int CircularArray<T>::next(int index)
 template <class T>
 string CircularArray<T>::to_string(string sep)
 {
-    int traverse = front; string result = ""; 
+    int traverse, control_size;
+    string result; 
+
     // iterate between front & back markers
-    int control_size = 0;
-    while(traverse != back && control_size < size_)
+    traverse = front, control_size = 0, result = ""; 
+    while(control_size < size_)
     {
         result += std::to_string((*this)[traverse]) + sep;
-        traverse = this->next(traverse);
+        traverse = next(traverse);
         control_size++;
     }
-    if (size_ == 0)
-        return result;
-    result += std::to_string((*this)[traverse]) + sep;
     return result;       
 }

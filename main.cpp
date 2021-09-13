@@ -33,7 +33,6 @@ void test_1()
 
 void test_2()
 {
-    //cout << __PRETTY_FUNCTION__ << " ";
     CircularArray<long long>* carray = new CircularArray <long long>(1);
     string showArray;
     for (long long i = 0; i <= 10; i++)
@@ -44,25 +43,24 @@ void test_2()
             carray->push_front(i);
         cout << carray->to_string() << '\n';
     }
-    
-    //cout << "pushs: "<< carray->to_string() << '\n';
+    cout << "carray: " << carray->to_string() << '\n';
+    carray->reverse();
+    cout << "carray: " << carray->to_string() << '\n';
+    carray->sort();
+    cout << "carray: " << carray->to_string() << '\n';
+    carray->reverse();
+    cout << "carray: " << carray->to_string() << '\n';
 
     int j = 0;
     while(!carray->is_empty()){
-        if (j&1){
-            //cout << "pop_front():  "; 
+        if (j&1)
             carray->pop_front();
-        } 
         else
-        {
-            //cout << "pop_back():   "; 
-            carray->pop_back();
-        } 
+            carray->pop_back(); 
         cout << carray->to_string() << '\n';
         j++;
     }
     cout << "carray: " << carray->to_string() << '\n';
-    
     return;
 }
 
