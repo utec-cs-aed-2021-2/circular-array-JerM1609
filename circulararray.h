@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
 template<typename T>
@@ -82,7 +83,6 @@ void SelectAlgo(T *arr, T *begin, T *end, int depthLimit)
     swapValue(pivot, end);
 
     T* partitionPoint = Partition(arr, begin - arr, end - arr);
-    printArray(arr, 20);
     SelectAlgo(arr, begin, partitionPoint - 1, depthLimit - 1);
     SelectAlgo(arr, partitionPoint + 1, end, depthLimit - 1);
     return;
@@ -105,7 +105,7 @@ protected:
     T *array;           // for runtime resizing
     int capacity;       // for table doubling
     int back, front;    // indirection markers
-    
+    int size_ = 0;
 public:
     CircularArray();                        // +
     CircularArray(int _capacity);           // +
@@ -113,20 +113,20 @@ public:
 
     void push_front(T data);                // +
     void push_back(T data);                 // +
-    void insert(T data, int pos);           //
+    void insert(T data, int pos);           // -
     T pop_front();                          // +
     T pop_back();                           // +          
     
-    bool is_full();                         //
-    bool is_empty();                        //
-    int size();                             //
+    bool is_full();                         // +
+    bool is_empty();                        // +
+    int size();                             // +
     
     void resize(int new_capacity);          // +
     void clear();                           // +
     T &operator[](int index);               // +
-    void sort();                            //  
-    bool is_sorted();                       // 
-    void reverse();                         // +-
+    void sort();                            // +
+    bool is_sorted();                       // +
+    void reverse();                         // +
     string to_string(string sep=" ");       // +
 
 private:
@@ -146,6 +146,7 @@ CircularArray<T>::CircularArray(int _capacity)
     this->array = new T[_capacity];         // dynamic array in heap
     this->capacity = _capacity;             // assign capacity
     this->front = this->back = -1;          // initialize indirection markers
+    size_ = 0;
 }
 
 template <class T>
@@ -160,7 +161,8 @@ void CircularArray<T>::push_front(T data)
     if (this->is_full())      // if last index is filled
         this->resize(capacity * 2);
     front = prev(front);      // go to the previous index
-    array[front] = data;      // fill index with new element
+    array[front] = data;      // fill index with new element}
+    size_++;
 }   
 
 template<class T>
@@ -170,12 +172,15 @@ void CircularArray<T>::push_back(T data)
         this->resize(capacity * 2);
     back = next(back);         // go to the next index
     array[back] = data;        // fill index with new element
+    size_++;
 }
 
 template<class T>
 void CircularArray<T>::insert(T data, int pos)
 {
-    // TODO
+    if (this->is_full())
+        this->resize(capacity*2);
+    // add element
     return;
 }
 
@@ -189,7 +194,7 @@ T CircularArray<T>::pop_front()
     }
     T rt_value = array[front];
     front = next(front);
-
+    size_--;
     // estrategia para liberar espacios inutilizados
     if (this->size() < capacity/2)
         this->resize(capacity/2);
@@ -206,7 +211,7 @@ T CircularArray<T>::pop_back()
     }
     T rt_value = array[back];
     back = prev(back);
-
+    size_--;
     // estrategia para liberar espacios inutilizados
     if (this->size() < capacity/2)
         this->resize(capacity/2);
@@ -222,29 +227,44 @@ bool CircularArray<T>::is_full()
 template<class T>
 bool CircularArray<T>::is_empty()
 {
-    return (this->size() == 0);
+    return size_ == 0;
 }
 
 template<class T>
 int CircularArray<T>::size()
 {
-    //TODO
+    return size_;
 }
 
 template<class T>
 void CircularArray<T>::resize(int new_capacity)
 {
     T* new_array = new T[new_capacity];
-    for (int i = 0; i < min(capacity, new_capacity); i++)
-        new_array[i] = array[i];
+    int traverse = front, nback = this->next(back);
+    int i = traverse % new_capacity, aux_sz = 0;
+    
+    this->front = i;
+    // copy numbers in new array
+    while (aux_sz < min(new_capacity, capacity) && traverse != nback)
+    {
+        new_array[i] = array[traverse];
+        i = (i + 1) % new_capacity;
+        traverse = next(traverse);
+        aux_sz++;
+    }
+    delete[] array;
+
     this->capacity = new_capacity;
+    this->back = prev(i);
+    this->array = new_array;
+    return;
 }
 
 template<class T>
 void CircularArray<T>::clear()
 {
     delete[] array;
-    capacity = 0;
+    capacity = size_ = 0;
     front = back = -1;
 }
 
@@ -257,13 +277,57 @@ T& CircularArray<T>::operator[](int index)
 template<class T>
 void CircularArray<T>::sort()
 {
-    //Introsort();
+    // store values of array in auxiliar array -> O(n)
+    T* aux_array = new T[size_];
+    int traverse = front, nback = next(back), i = 0; 
+    while (traverse != nback && i < size_)
+    {
+        aux_array[i] = array[traverse];
+        traverse = next(traverse); i++;
+    }
+
+    // sort values in auxiliar array -> O(n logn)
+    Introsort(aux_array, aux_array, aux_array + size_ - 1);
+
+    // copy values from auxiliar array to array member -> O(n)
+    traverse = front, nback = next(back), i = 0;
+    while (traverse != nback && i < size_)
+    {
+        array[traverse] = aux_array[i];
+        traverse = next(traverse); i++;
+    }
+    delete[] aux_array;     // release memory
+    return;
 }
 
 template<class T>
 bool CircularArray<T>::is_sorted()
 {
+    // store values of array in auxiliar array -> O(n)
+    T* aux_array = new T[size_];
+    int traverse = front, nback = next(back), i = 0;
+    while (traverse != nback && i < size_)
+    {
+        aux_array[i] = array[traverse];
+        traverse = next(traverse); i++;
+    }
+    // sort values of auxiliar_array
+    Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
+    // compare arrays
+    traverse = front, nback = next(back), i = 0;
+    while(traverse != nback && i < size_)
+    {
+        if (aux_array[i] != array[traverse])
+        {
+            delete[] aux_array;
+            return false;
+        }
+        traverse = next(traverse);
+        i++;
+    }
+    delete[] aux_array;
+    return true;
 }
 
 template<class T>
@@ -271,7 +335,7 @@ void CircularArray<T>::reverse()
 {
     int sfront = front, sback = sback;
     T temp;
-    while (sfront < sback)          // then, change condition
+    while (sfront != sback)          
     {
         temp = array[sback];
         array[sback] = array[sfront];
