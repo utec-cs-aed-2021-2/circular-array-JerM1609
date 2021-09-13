@@ -139,8 +139,8 @@ public:
     void reverse();                         // ++
     string to_string(string sep=" ");       // ++
 
-    T front() { return array[front]; }      // ++
-    T back() { return array[back]; }        // ++
+    T front_() { return array[front]; }      // ++
+    T back_() { return array[back]; }        // ++
 private:
     int next(int);      // ++
     int prev(int);      // ++
@@ -241,7 +241,7 @@ void CircularArray<T>::insert(T data, int pos)
 
     // move elements one position from [pos] to [size_ + 1] address memory
     while( pos < size_ + 1 )
-    {
+    {   //cout << "(pos: " << pos << ") ";
         aux_data = aux_array[pos];
         aux_array[pos] = data;
         data = aux_data;
@@ -250,13 +250,13 @@ void CircularArray<T>::insert(T data, int pos)
     
     // reassign elements of *array from *aux_array
     traverse = front, i = 0;
-    while( i < size_ )
+    while( i < size_ + 1)
     {
         array[traverse] = aux_array[i];
         traverse = next(traverse), i++;
     }
     
-    delete[] aux_array, size_++;
+    delete[] aux_array, size_++, back = next(back);
     return;
 }
 

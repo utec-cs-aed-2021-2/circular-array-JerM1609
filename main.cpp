@@ -4,9 +4,8 @@
 
 using namespace std;
 
-
-void test_1()
-{
+int main() {
+    
     CircularArray<int>* array = new CircularArray<int>(7);
     ASSERT(array->is_empty() == true, "The function is_empty is not working");
     array->push_back(6);
@@ -30,55 +29,6 @@ void test_1()
     array->reverse();
     ASSERT(array->to_string() == "15 10 8 7 4 3 2 ", "The function reverse is not working");   
     delete array;
-}
-
-void test_2()
-{
-    CircularArray<long long>* carray = new CircularArray <long long>(1);
-    string showArray;
-    int cnt = 1;
-    while (cnt <= 3)
-    {
-        for (long long i = 0; i <= 10*cnt; i++)
-        {
-            if (i & 1)  // "i" is odd
-                carray->push_back(i);
-            else
-                carray->push_front(i);
-            cout << carray->to_string() << '\n';
-        }
-        
-        cout << "carray: " << carray->to_string() << '\n';
-        carray->reverse();
-        cout << "carray: " << carray->to_string() << '\n';
-        carray->sort();
-        cout << "carray: " << carray->to_string() << '\n';
-        carray->reverse();
-        cout << "carray: " << carray->to_string() << '\n';
-        
-        int j = 0;
-        while(!carray->is_empty()){
-            if (j&1)
-                carray->pop_front();
-            else
-                carray->pop_back(); 
-            cout << carray->to_string() << '\n';
-            j++;
-        }
-        cout << "carray: " << carray->to_string() << '\n';
-        carray->clear();
-        cnt++;
-    }
-    
-    return;
-}
-
-int main() {
-    cout << "\n\tTEST 1\n";
-    test_1();
-
-    cout << "\n\tTEST 2\n";
-    test_2();
 
     return 0;
 }
