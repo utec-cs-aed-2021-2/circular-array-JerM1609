@@ -121,17 +121,17 @@ public:
     CircularArray(int _capacity);           // ++
     virtual ~CircularArray();               // ++
 
-    void push_front(T data);                // +-+
-    void push_back(T data);                 // +-+
-    void insert(T data, int pos);           // -
-    T pop_front();                          // +-+
-    T pop_back();                           // +-+        
+    void push_front(T data);                // ++-
+    void push_back(T data);                 // ++-
+    void insert(T data, int pos);           // ++-
+    T pop_front();                          // ++-
+    T pop_back();                           // ++-        
     
     bool is_full();                         // ++
     bool is_empty();                        // ++
     int size();                             // ++
     
-    void resize(int new_capacity);          // +-+
+    void resize(int new_capacity);          // ++-
     void clear();                           // ++
     T &operator[](int index);               // ++
     void sort();                            // ++
@@ -139,6 +139,8 @@ public:
     void reverse();                         // ++
     string to_string(string sep=" ");       // ++
 
+    T front() { return array[front]; }      // ++
+    T back() { return array[back]; }        // ++
 private:
     int next(int);      // ++
     int prev(int);      // ++
@@ -226,7 +228,35 @@ void CircularArray<T>::insert(T data, int pos)
     if (this->is_full())
         this->resize(capacity*2);   
     // add element
+    T *aux_array = new T[size_ + 1], aux_data;
+    int traverse, i;
 
+    // copy elements of *array in *aux_array with [size_ + 1] of storage
+    traverse = front, i = 0;
+    while( i < size_ )
+    {
+        aux_array[i] = array[traverse];
+        traverse = next(traverse), i++;
+    }
+
+    // move elements one position from [pos] to [size_ + 1] address memory
+    while( pos < size_ + 1 )
+    {
+        aux_data = aux_array[pos];
+        aux_array[pos] = data;
+        data = aux_data;
+        pos++;
+    }
+    
+    // reassign elements of *array from *aux_array
+    traverse = front, i = 0;
+    while( i < size_ )
+    {
+        array[traverse] = aux_array[i];
+        traverse = next(traverse), i++;
+    }
+    
+    delete[] aux_array, size_++;
     return;
 }
 
