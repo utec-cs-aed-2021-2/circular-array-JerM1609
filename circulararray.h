@@ -145,7 +145,7 @@ CircularArray<T>::CircularArray(int _capacity)
 {
     this->array = new T[_capacity];         // dynamic array in heap
     this->capacity = _capacity;             // assign capacity
-    this->front = this->back = -1;          // initialize indirection markers
+    this->front = 0, this->back = -1;          // initialize indirection markers
     size_ = 0;
 }
 
@@ -271,7 +271,7 @@ void CircularArray<T>::clear()
 template<class T>
 T& CircularArray<T>::operator[](int index)
 {
-    return array[(front + index)%capacity];
+    return array[index];
 }
 
 template<class T>
@@ -362,12 +362,13 @@ int CircularArray<T>::next(int index)
 template <class T>
 string CircularArray<T>::to_string(string sep)
 {
-    int traverse = front, nback = this->next(back);
+    int traverse = front, nback = back;
     string result = ""; 
     while(traverse != nback)
     {
         result += std::to_string((*this)[traverse]) + sep;
         traverse = this->next(traverse);
     }
-    return result;    
+    result += std::to_string((*this)[traverse]) + sep;
+    return result;       
 }
