@@ -279,23 +279,26 @@ void CircularArray<T>::sort()
 {
     // store values of array in auxiliar array -> O(n)
     T* aux_array = new T[size_];
-    int traverse = front, nback = next(back), i = 0; 
-    while (traverse != nback && i < size_)
+    int traverse = front, i = 0; 
+    while (traverse != back && i < size_)
     {
         aux_array[i] = array[traverse];
         traverse = next(traverse); i++;
     }
+    aux_array[i] = array[traverse];
 
     // sort values in auxiliar array -> O(n logn)
     Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
     // copy values from auxiliar array to array member -> O(n)
-    traverse = front, nback = next(back), i = 0;
-    while (traverse != nback && i < size_)
+    traverse = front, i = 0;
+    while (traverse != back && i < size_)
     {
         array[traverse] = aux_array[i];
         traverse = next(traverse); i++;
     }
+    array[traverse] = aux_array[i];
+
     delete[] aux_array;     // release memory
     return;
 }
@@ -305,18 +308,20 @@ bool CircularArray<T>::is_sorted()
 {
     // store values of array in auxiliar array -> O(n)
     T* aux_array = new T[size_];
-    int traverse = front, nback = next(back), i = 0;
-    while (traverse != nback && i < size_)
+    int traverse = front, i = 0;
+    while (traverse != back && i < size_)
     {
         aux_array[i] = array[traverse];
         traverse = next(traverse); i++;
     }
+    aux_array[i] = array[traverse];
+    
     // sort values of auxiliar_array
     Introsort(aux_array, aux_array, aux_array + size_ - 1);
 
     // compare arrays
-    traverse = front, nback = next(back), i = 0;
-    while(traverse != nback && i < size_)
+    traverse = front, i = 0;
+    while(traverse != back && i < size_)
     {
         if (aux_array[i] != array[traverse])
         {
