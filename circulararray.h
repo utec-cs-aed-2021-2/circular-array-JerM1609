@@ -8,7 +8,7 @@ void printArray(T* container, int capacity)
 {
     for (int i = 0; i < capacity; i++)
         cout << *(container + i) << " ";
-    cout << endl;
+    cout << "  ";
 } 
 
 // ------------------------------------------------------------------ INTROSORT
@@ -177,9 +177,10 @@ void CircularArray<T>::push_front(T data)
     }
         
     front = prev(front);      // go to the previous index
-    //cout << front << endl;
     array[front] = data;      // fill index with new element
     size_++;
+
+    //printArray(array, capacity); cout << "->  (" << front << ", " << back << ") -> ";
 }   
 
 template<class T>
@@ -193,6 +194,7 @@ void CircularArray<T>::push_back(T data)
     size_++;
     if (size_ == 1 && front < 0)
         front = back;
+    //printArray(array, capacity); cout << "->  (" << front << ", " << back << ") -> ";
 }
 
 template<class T>
@@ -225,7 +227,7 @@ T CircularArray<T>::pop_front()
     //cout << " (" << size_ << ", " << capacity << ") -> ";
     if (size_ < (capacity/2))
         this->resize(capacity/2);
-    
+    //printArray(array, capacity); cout << "->  ";
     return rt_value;
 }
 
@@ -245,7 +247,7 @@ T CircularArray<T>::pop_back()
     // estrategia para liberar espacios inutilizados
     if (size_ < (capacity/2))
         this->resize(capacity/2);
-    
+    //printArray(array, capacity); cout << "->  ";
     return rt_value;
 }
 
@@ -271,33 +273,39 @@ int CircularArray<T>::size()
 template<class T>
 void CircularArray<T>::resize(int new_capacity)
 {
-    cout << __PRETTY_FUNCTION__ << " " << new_capacity << " -> ";
-    //cout << "resize\t " << new_capacity << "\t";
-    //printArray(array, capacity); 
-    //cout << "f: " << front << " b: " << back << endl;
+    //cout << __PRETTY_FUNCTION__ << " " << new_capacity << " -> ";
+
+    //cout << "\n( old_capacity: " << capacity << ", old_front: " << front << ", old_back: " << back << " ) -> ";
+    //printArray(array, capacity); cout << endl;
 
     T* new_array = new T[new_capacity];
     int traverse = front;
     int i = traverse % new_capacity, aux_sz = 0;
-    
+
     this->front = i;
     // copy numbers in new array
-    while (aux_sz < min(new_capacity, capacity))
+    while (aux_sz < size_)
     {
+        /*
+        if (new_capacity == 8)
+        {
+            cout << "( i: " << i << ", traverse: " << traverse << ") -> " << array[traverse] << "\n";
+        }
+        */
         new_array[i] = array[traverse];
         i = (i + 1) % new_capacity;
         traverse = next(traverse);
         aux_sz++;
     }
+    //new_array[i] = array[traverse];
+
     delete[] array;
 
     this->capacity = new_capacity;
     this->back = prev(i);
     this->array = new_array;
-
-    //printArray(array, capacity);
-    //cout << "f: " << front << " b: " << back << endl;
-
+    //cout << "( new_capacity: " << capacity << ", new_front: " << front << ", new_back: " << back << " ) -> ";
+    //printArray(array, capacity); cout << endl;
     return;
 }
 
@@ -419,7 +427,6 @@ string CircularArray<T>::to_string(string sep)
     int traverse = front; string result = ""; 
     // iterate between front & back markers
     int control_size = 0;
-    //cout << " (" <<  size_ << ") ";
     while(traverse != back && control_size < size_)
     {
         result += std::to_string((*this)[traverse]) + sep;

@@ -33,7 +33,7 @@ void test_1()
 
 void test_2()
 {
-    cout << __PRETTY_FUNCTION__ << " ";
+    //cout << __PRETTY_FUNCTION__ << " ";
     CircularArray<long long>* carray = new CircularArray <long long>(1);
     string showArray;
     for (long long i = 0; i <= 10; i++)
@@ -45,6 +45,7 @@ void test_2()
         cout << carray->to_string() << '\n';
     }
     
+    //cout << "pushs: "<< carray->to_string() << '\n';
 
     int j = 0;
     while(!carray->is_empty()){
@@ -71,7 +72,12 @@ void test_3()
 }
 
 int main() {
+    cout << "\n\tTEST 1\n";
     test_1();
-    //test_2();
+
+    cout << "\n\tTEST 2\n";
+    test_2();
+
+    cout << "\n\tTEST 3\n";
     return 0;
 }
