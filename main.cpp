@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 void test_1()
 {
     CircularArray<int>* array = new CircularArray<int>(7);
@@ -46,7 +47,7 @@ void test_2()
                 carray->push_front(i);
             cout << carray->to_string() << '\n';
         }
-        /*
+        
         cout << "carray: " << carray->to_string() << '\n';
         carray->reverse();
         cout << "carray: " << carray->to_string() << '\n';
@@ -54,7 +55,7 @@ void test_2()
         cout << "carray: " << carray->to_string() << '\n';
         carray->reverse();
         cout << "carray: " << carray->to_string() << '\n';
-        */
+        
         int j = 0;
         while(!carray->is_empty()){
             if (j&1)
@@ -72,18 +73,12 @@ void test_2()
     return;
 }
 
-void test_3()
-{
-    return;
-}
-
 int main() {
     cout << "\n\tTEST 1\n";
     test_1();
 
-    //cout << "\n\tTEST 2\n";
-    //test_2();
+    cout << "\n\tTEST 2\n";
+    test_2();
 
-    //cout << "\n\tTEST 3\n";
     return 0;
 }

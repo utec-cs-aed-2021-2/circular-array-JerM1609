@@ -6,6 +6,8 @@ template <typename T>
 class QueueArray : public CircularArray<T> { 
 public:
     QueueArray() = default;
+    ~QueueArray() = default;
+
     T dequeue();
     void enqueue(T data);
     void display();
@@ -14,7 +16,7 @@ public:
 template<typename T>
 T QueueArray<T>::dequeue()
 {
-    this->pop_front();
+    return this->pop_front();
 }
 
 template<typename T>
@@ -26,5 +28,5 @@ void QueueArray<T>::enqueue(T data)
 template<typename T>
 void QueueArray<T>::display()
 {
-    cout << this->to_string(" ");
+    cout << this->to_string(" ") << endl;
 }

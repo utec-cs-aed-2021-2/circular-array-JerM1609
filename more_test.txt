@@ -1,0 +1,54 @@
+
+#include "queue.h"
+void test_3_queue()
+{
+    int i;
+
+    cout << "\n\t\tTEST QUEUE\n";
+    QueueArray<int>* cola = new QueueArray<int>();   
+    i = 20;
+    while(i--)
+    {
+        cola->enqueue(i);
+        cola->display();
+    }
+    while(!cola->is_empty())
+    {
+        cola->dequeue();
+        cola->display();
+    }
+    
+    return;
+}
+
+int main()
+{
+    cout << "\n\tTEST 3\n";
+    test_3_queue();
+}
+
+#include "stack.h"
+void test_4_stack()
+{
+    int letter = 64;
+    cout << "\n\t\tTEST STACK\n";
+    auto pila = new StackArray<char>();
+
+    while (letter++ <= 75)
+    {
+        pila->push(char(letter));
+        pila->display();
+    }
+    
+    while (!pila->is_empty())
+    {
+        pila->pop();
+        pila->display();
+    }
+}
+
+int main()
+{
+    cout << "\n\tTEST 4\n";
+    test_4_stack();
+}

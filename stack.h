@@ -5,7 +5,9 @@
 template <typename T>
 class StackArray : public CircularArray<T> {
 public:
-    StackArray() = default;     // + 
+    StackArray() = default;     // +
+    ~StackArray() = default; 
+
     void push(T data);          // +
     T pop();                    // +
     void display();             // -
@@ -20,11 +22,11 @@ void StackArray<T>::push(T data)
 template<typename T>
 T StackArray<T>::pop()
 {
-    this->pop_back();
+    return this->pop_back();
 }
 
 template<typename T>
 void StackArray<T>::display()
 {
-    cout << this->to_string(" ");
+    cout << this->to_string(" ") << endl;
 }

@@ -335,8 +335,7 @@ void CircularArray<T>::resize(int new_capacity)
 template<class T>
 void CircularArray<T>::clear()
 {   // release and restart indirection markers
-    delete[] array;    
-    array = nullptr;     
+    delete[] array, array = nullptr;     
     capacity = size_ = 0;
     front = back = -1;
 }
